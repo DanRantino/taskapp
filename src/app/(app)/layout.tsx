@@ -1,5 +1,4 @@
 import Navbar from '@/components/ui/navBar';
-import './globals.css';
 import Providers from '@/components/logic/providers';
 
 export const metadata = {
@@ -9,13 +8,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="w-screen min-h-screen overflow-hidden">
-        <Providers>
-          <Navbar />
-          <main className="min-h-screen bg-background flex flex-col items-center">{children}</main>
-        </Providers>
-      </body>
-    </html>
+    <body className="w-screen min-h-screen overflow-hidden">
+      <Providers>
+        <Navbar />
+        <main className="min-h-screen bg-background flex flex-col items-center">{children}</main>
+      </Providers>
+    </body>
   );
 }

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+'use client';
 import Messages from './messages';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
