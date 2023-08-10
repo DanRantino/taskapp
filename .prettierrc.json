@@ -1,0 +1,27 @@
+{
+  "semi": true,
+  "trailingComma": "all",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "jsxBracketSameLine": false,
+  "printWidth": 120,
+  "quoteProps": "as-needed",
+  "proseWrap": "preserve",
+  "useTabs": false,
+  "vueIndentScriptAndStyle": true,
+  "eslintIntegration": true,
+  "stylelintIntegration": true,
+  "editorConfig": true,
+  "overrides": [
+    {
+      "files": ["*.jsx", "*.tsx"],
+      "rules": {
+        "react/jsx-key": "off"
+      }
+    }
+  ]
+}
