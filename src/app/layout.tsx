@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="w-screen min-h-screen overflow-hidden">
         <Providers>
           <Navbar />
-          <main className="min-h-screen bg-base-100 flex flex-col items-center">{children}</main>
+          <main className="min-h-screen bg-background flex flex-col items-center">{children}</main>
         </Providers>
       </body>
     </html>
