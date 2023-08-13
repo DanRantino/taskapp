@@ -19,7 +19,7 @@ function Navbar() {
     refetchOnWindowFocus: false,
   });
   return (
-    <nav className="w-screen h-12 bg-background border-b flex items-center shadow-lg shadow-black ">
+    <nav className="w-screen h-14 bg-background border-b flex items-center shadow-lg shadow-black ">
       <div className="w-36 px-4 h-12 flex items-center border-muted-foreground border-r">
         <span className="text-card-foreground p-2">Task app</span>
       </div>

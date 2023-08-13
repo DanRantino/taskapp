@@ -8,9 +8,7 @@ function Avatar({ src }: Props) {
   return (
     <Root>
       <AvatarImage src={src} />
-      <AvatarFallback>
-        <Skeleton className="w-10 rounded-full h-10 bg-base-300" />
-      </AvatarFallback>
+      <AvatarFallback>CN</AvatarFallback>
     </Root>
   );
 }
