@@ -1,7 +1,5 @@
 import Navbar from '@/components/ui/navBar';
-import './globals.css';
 import Providers from '@/components/logic/providers';
-import { ThemeProvider } from '@/components/logic/theme-provider';
 
 export const metadata = {
   title: 'Create Next App',
@@ -10,12 +8,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <body className="w-screen min-h-screen overflow-hidden">
+      <Providers>
+        <Navbar />
+        <main className="min-h-screen bg-background flex flex-col items-center">{children}</main>
+      </Providers>
+    </body>
   );
 }
