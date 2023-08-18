@@ -4,6 +4,16 @@ import { ColumnDef } from '@tanstack/react-table';
 import type { TTasks } from '@/types/tasks.types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { FileEdit, MoreHorizontal } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 //TODO: adicionar edit task https://ui.shadcn.com/docs/components/data-table#row-actions
 
@@ -28,20 +38,9 @@ export const columns: ColumnDef<TTasks>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
-  {
-    accessorKey: 'done',
-    header: 'Done',
-    cell: info => <Checkbox checked={info.getValue() as boolean} disabled />,
-  },
-  {
-    accessorKey: 'task',
-    header: 'Task',
-    cell: info => <div className="w-96">{info.getValue() as string}</div>,
-  },
-  {
-    accessorKey: 'profiles.username',
-    header: 'User',
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: 'status',
@@ -59,12 +58,59 @@ export const columns: ColumnDef<TTasks>[] = [
         {String(info.getValue()).toUpperCase() as string}
       </p>
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'task',
+    header: 'Task',
+    cell: info => <div className="w-96">{info.getValue() as string}</div>,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'profiles.username',
+    header: 'User',
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
 
   {
     accessorKey: 'created_at',
     header: 'Created at',
     cell: info => formataData(info.getValue() as string),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const { id } = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
+              <MoreHorizontal className="mr-2 h-4 w-4" />
+              Actions
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => {}}>
+              <Link href={`/${id}`} className="flex w-full justify-evenly">
+                <FileEdit />
+                <span>Edit task</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
 
