@@ -16,3 +16,11 @@ export async function doneTask(id: string | undefined, done: boolean) {
   const ret = await supabase.from('tasks').update({ done }).eq('id', 'f154a4f3-59fa-41d0-86e4-7aa57274f218');
   console.log('🚀 ~ file: actions.ts:17 ~ doneTask ~ ret:', ret);
 }
+
+export async function deleteById(id: string | undefined) {
+  const supabase = createServerClient();
+  if (!id) return null;
+  const ret = await supabase.from('tasks').delete().eq('id', id);
+  console.log('🚀 ~ file: actions.ts:24 ~ deleteById ~ ret:', ret);
+  revalidatePath('/');
+}

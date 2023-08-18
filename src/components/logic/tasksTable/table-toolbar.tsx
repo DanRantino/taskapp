@@ -6,7 +6,7 @@ import { Table } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DataTableViewOptions } from '@/components/ui/table-view-options';
-import { DataTableFacetedFilter } from './table-facet-filter';
+import { DataTableFacetedFilter } from '@/components/ui/table-facet-filter';
 
 // import { priorities, statuses } from '../data/data';
 // import { DataTableFacetedFilter } from './data-table-faceted-filter';
@@ -35,6 +35,26 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
               {
                 label: 'To Do',
                 value: 'to do',
+              },
+              {
+                label: 'In Progress',
+                value: 'in progress',
+              },
+              {
+                label: 'Done',
+                value: 'done',
+              },
+              {
+                label: 'Pending',
+                value: 'pending',
+              },
+              {
+                label: 'Completed',
+                value: 'completed',
+              },
+              {
+                label: 'Backlog',
+                value: 'backlog',
               },
             ]}
           />

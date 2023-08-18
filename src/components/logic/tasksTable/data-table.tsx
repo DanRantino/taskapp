@@ -18,9 +18,10 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useState } from 'react';
 import { DataTablePagination } from '@/components/ui/table-pagination';
-import { DataTableToolbar } from '@/components/ui/table-toolbar';
+import { DataTableToolbar } from './table-toolbar';
 import { Button } from '@/components/ui/button';
 import DeleteDialog from '../dialog/confirm-delete';
+import { deleteById } from '@/server/tasks/actions';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -32,7 +33,6 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  console.log('🚀 ~ file: data-table.tsx:30 ~ rowSelection:', rowSelection);
   const table = useReactTable({
     data,
     columns,
@@ -61,12 +61,11 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
   });
 
   function deleteTasks() {
-    console.log(
-      '🚀 ~ file: data-table.tsx:65 ~ deleteTasks ~  table.getSelectedRowModel():',
-      table.getSelectedRowModel(),
-    );
+    table.getSelectedRowModel().rows.forEach(row => {
+      //@ts-ignore
+      deleteById(row.original?.id as string);
+    });
   }
-
   return (
     <div className="space-y-4 w-10/12 h-full pt-4">
       <DataTableToolbar table={table} />
