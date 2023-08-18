@@ -19,6 +19,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useState } from 'react';
 import { DataTablePagination } from '@/components/ui/table-pagination';
 import { DataTableToolbar } from '@/components/ui/table-toolbar';
+import { Button } from '@/components/ui/button';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -30,6 +31,7 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  console.log('🚀 ~ file: data-table.tsx:30 ~ rowSelection:', rowSelection);
   const table = useReactTable({
     data,
     columns,
@@ -95,6 +97,11 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
         </Table>
       </div>
       <DataTablePagination table={table} />
+      <div>
+        <Button onClick={() => toast} variant={'destructive'}>
+          Apagar
+        </Button>
+      </div>
     </div>
   );
 }

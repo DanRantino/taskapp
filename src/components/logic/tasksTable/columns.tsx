@@ -4,12 +4,32 @@ import { ColumnDef } from '@tanstack/react-table';
 import type { TTasks } from '@/types/tasks.types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { createBrowserClient } from '@/server/browserClient';
 
 export const columns: ColumnDef<TTasks>[] = [
   {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={value => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: 'done',
     header: 'Done',
-    cell: info => <Checkbox checked={info.getValue() as boolean} onCheckedChange={console.log} />,
+    cell: info => <Checkbox checked={info.getValue() as boolean} disabled />,
   },
   {
     accessorKey: 'task',

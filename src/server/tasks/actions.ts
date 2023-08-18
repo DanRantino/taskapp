@@ -7,3 +7,12 @@ export async function getTasks() {
   revalidatePath('/');
   return await supabase.from('tasks').select('*, profiles( username  ) ');
 }
+
+export async function doneTask(id: string | undefined, done: boolean) {
+  const supabase = createServerClient();
+  if (!id) return null;
+  console.log('🚀 ~ file: actions.ts:16 ~ doneTask ~ done:', done);
+
+  const ret = await supabase.from('tasks').update({ done }).eq('id', 'f154a4f3-59fa-41d0-86e4-7aa57274f218');
+  console.log('🚀 ~ file: actions.ts:17 ~ doneTask ~ ret:', ret);
+}
