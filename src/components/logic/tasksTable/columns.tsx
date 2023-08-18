@@ -4,7 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import type { TTasks } from '@/types/tasks.types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { createBrowserClient } from '@/server/browserClient';
+
+//TODO: adicionar edit task https://ui.shadcn.com/docs/components/data-table#row-actions
+
+//TODO: novo modo de apresentar o status das tarefas
 
 export const columns: ColumnDef<TTasks>[] = [
   {

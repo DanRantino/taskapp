@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { DataTablePagination } from '@/components/ui/table-pagination';
 import { DataTableToolbar } from '@/components/ui/table-toolbar';
 import { Button } from '@/components/ui/button';
+import DeleteDialog from '../dialog/confirm-delete';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -58,6 +59,13 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  function deleteTasks() {
+    console.log(
+      '🚀 ~ file: data-table.tsx:65 ~ deleteTasks ~  table.getSelectedRowModel():',
+      table.getSelectedRowModel(),
+    );
+  }
 
   return (
     <div className="space-y-4 w-10/12 h-full pt-4">
@@ -98,9 +106,7 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
       </div>
       <DataTablePagination table={table} />
       <div>
-        <Button onClick={() => toast} variant={'destructive'}>
-          Apagar
-        </Button>
+        <DeleteDialog action={deleteTasks} />
       </div>
     </div>
   );
