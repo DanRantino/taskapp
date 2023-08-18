@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import type { TTasks } from '@/types/tasks.types';
 import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 export const columns: ColumnDef<TTasks>[] = [
   {
@@ -22,6 +23,19 @@ export const columns: ColumnDef<TTasks>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: info => (
+      <p
+        className={cn('font-medium', {
+          'text-green-500': info.getValue() === 'completed',
+          'text-red-500': info.getValue() === 'pending',
+          'text-yellow-500': info.getValue() === 'in progress',
+          'text-gray-500': info.getValue() === 'to do',
+          'text-blue-500': info.getValue() === 'backlog',
+        })}
+      >
+        {String(info.getValue()).toUpperCase() as string}
+      </p>
+    ),
   },
 
   {

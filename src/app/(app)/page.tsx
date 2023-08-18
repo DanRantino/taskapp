@@ -6,7 +6,7 @@ export default async function Index() {
   const { data: tasks } = await getTasks();
 
   return (
-    <div className="w-full h-3/4 flex flex-col items-center  overflow-auto">
+    <div className="flex flex-col items-center overflow-auto w-full h-screen">
       {!tasks ? <h1>Loading...</h1> : <TableTasks columns={columns} data={tasks} />}
     </div>
   );
