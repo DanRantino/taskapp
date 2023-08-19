@@ -13,3 +13,8 @@ export async function getProfile() {
     .single();
   return { profile, status };
 }
+
+export async function getProfiles() {
+  const supabase = createServerClient();
+  return await supabase.from('profiles').select('*');
+}

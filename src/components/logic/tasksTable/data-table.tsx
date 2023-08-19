@@ -61,10 +61,10 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
   });
 
   function deleteTasks() {
-    table.getSelectedRowModel().rows.forEach(row => {
-      //@ts-ignore
-      deleteById(row.original?.id as string);
-    });
+    // table.getSelectedRowModel().rows.forEach(row => {
+    //   //@ts-ignore
+    //   deleteById(row.original?.id as string);
+    // });
   }
   return (
     <div className="space-y-4 w-10/12 h-full pt-4">

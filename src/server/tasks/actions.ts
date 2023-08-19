@@ -21,6 +21,12 @@ export async function deleteById(id: string | undefined) {
   const supabase = createServerClient();
   if (!id) return null;
   const ret = await supabase.from('tasks').delete().eq('id', id);
-  console.log('🚀 ~ file: actions.ts:24 ~ deleteById ~ ret:', ret);
   revalidatePath('/');
+}
+
+export async function getTaskById(id: string | null) {
+  const supabase = createServerClient();
+  if (!id) return null;
+  const data = (await supabase.from('tasks').select('*, profiles( username  )').eq('id', id).single()).data;
+  return data;
 }

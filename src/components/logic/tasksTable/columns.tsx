@@ -47,14 +47,14 @@ export const columns: ColumnDef<TTasks>[] = [
     cell: info => (
       <p
         className={cn('font-medium', {
-          'text-green-500': info.getValue() === 'completed',
-          'text-red-500': info.getValue() === 'pending',
-          'text-yellow-500': info.getValue() === 'in progress',
-          'text-gray-500': info.getValue() === 'to do',
-          'text-blue-500': info.getValue() === 'backlog',
+          'text-green-500': info.getValue() === 'COMPLETED',
+          'text-red-500': info.getValue() === 'PENDING',
+          'text-yellow-500': info.getValue() === 'IN PROGRESS',
+          'text-gray-500': info.getValue() === 'TO DO',
+          'text-blue-500': info.getValue() === 'BACKLOG',
         })}
       >
-        {String(info.getValue()).toUpperCase() as string}
+        {String(info.getValue()) as string}
       </p>
     ),
     filterFn: (row, id, value) => {
@@ -76,38 +76,39 @@ export const columns: ColumnDef<TTasks>[] = [
       return value.includes(row.getValue(id));
     },
   },
-
-  {
-    accessorKey: 'created_at',
-    header: 'Created at',
-    cell: info => formataData(info.getValue() as string),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-  },
   {
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => {
       const { id } = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
-              <MoreHorizontal className="mr-2 h-4 w-4" />
-              Actions
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => {}}>
-              <Link href={`/${id}`} className="flex w-full justify-evenly">
-                <FileEdit />
-                <span>Edit task</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="">
+                <MoreHorizontal className="mr-2 h-4 w-4" />
+                Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => {}}>
+                <Link
+                  href={{
+                    query: {
+                      id: id,
+                    },
+                  }}
+                  className="flex w-full justify-evenly"
+                >
+                  <FileEdit />
+                  <span>Edit task</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },
