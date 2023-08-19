@@ -15,9 +15,8 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-//TODO: adicionar edit task https://ui.shadcn.com/docs/components/data-table#row-actions
-
-//TODO: novo modo de apresentar o status das tarefas
+//TODO: ao acionar a opção de editar deve mudar os campos para input
+//TODO: possibilidade do filtro das task ser por contém
 
 export const columns: ColumnDef<TTasks>[] = [
   {
