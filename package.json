@@ -4,10 +4,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "supabase:types": "npx supabase gen types typescript --project-id aawymplufqwhncayzxfa > src/types/supabase.ts"
+    "supabase:types": "npx supabase gen types typescript --project-id aawymplufqwhncayzxfa > src/types/supabase.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",
+    "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.4",
@@ -47,6 +48,6 @@
     "@types/react-dom": "18.2.5",
     "daisyui": "^3.5.1",
     "encoding": "^0.1.13",
-    "supabase": "^1.83.7"
+    "supabase": "^1.86.2"
   }
 }
