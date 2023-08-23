@@ -30,7 +30,7 @@ export async function updateTask(
 ) {
   const supabase = createServerClient();
   if (!id) return null;
-  const { data, error } = await supabase.from('profiles').select('*').eq('username', username).single();
+  const { data } = await supabase.from('profiles').select('*').eq('username', username).single();
   if (!data) return null;
-  await supabase.from('tasks').update({ task, status, user_id: data.id }).eq('id', id);
+  return await supabase.from('tasks').update({ task, status, user_id: data.id }).eq('id', id);
 }

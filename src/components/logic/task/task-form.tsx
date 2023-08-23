@@ -72,7 +72,6 @@ function TaskForm({ id }: Props) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await updateTask(id, values.task, values.status, values.profiles?.username);
     queryClient.invalidateQueries(['tasks']);
-    router.push('/');
   }
 
   function defaultValue() {
