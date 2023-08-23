@@ -1,6 +1,7 @@
 'use server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { createServerClient } from '../serverClient';
+import { TStatus } from '@/types/tasks.types';
 
 export async function getTasks() {
   const supabase = createServerClient();
@@ -25,7 +26,7 @@ export async function getTaskById(id: string | null) {
 export async function updateTask(
   id: string | null,
   task: string | null | undefined,
-  status: 'BACKLOG' | 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'TO DO' | null | undefined,
+  status: TStatus | null | undefined,
   username: string | null | undefined,
 ) {
   const supabase = createServerClient();

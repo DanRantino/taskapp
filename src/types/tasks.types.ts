@@ -7,3 +7,5 @@ export type TTasks = {
   user_id?: string | null;
   status?: string | null;
 };
+
+export type TStatus = 'BACKLOG' | 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'TO DO';

@@ -56,6 +56,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             title="Status"
             options={[
               {
+                label: 'DONE',
+                value: 'DONE',
+              },
+              {
                 label: 'TO DO',
                 value: 'TO DO',
               },
