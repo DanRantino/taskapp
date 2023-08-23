@@ -16,5 +16,5 @@ export async function getProfile() {
 
 export async function getProfiles() {
   const supabase = createServerClient();
-  return await supabase.from('profiles').select('*');
+  return await supabase.from('profiles').select(' username ');
 }
