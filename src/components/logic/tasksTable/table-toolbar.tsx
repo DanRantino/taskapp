@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DataTableViewOptions } from '@/components/ui/table-view-options';
 import { DataTableFacetedFilter } from '@/components/ui/table-facet-filter';
+import { useQuery } from '@tanstack/react-query';
+import { getProfiles } from '@/server/profile/actions';
+import { useState } from 'react';
 
 // import { priorities, statuses } from '../data/data';
 // import { DataTableFacetedFilter } from './data-table-faceted-filter';
@@ -17,6 +20,26 @@ interface DataTableToolbarProps<TData> {
 
 export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const [filterProfiles, setFilterProfiles] = useState<
+    {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[]
+  >([]);
+  const { data: profiles } = useQuery(['profiles'], async () => {
+    const { data } = await getProfiles();
+    let arr: {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[] = [];
+    data?.forEach(profile => {
+      arr.push({ label: profile.username, value: profile.username });
+    });
+    setFilterProfiles(arr);
+    return { data };
+  });
 
   return (
     <div className="flex items-center justify-between">
@@ -33,35 +56,35 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             title="Status"
             options={[
               {
-                label: 'To Do',
-                value: 'to do',
+                label: 'TO DO',
+                value: 'TO DO',
               },
               {
-                label: 'In Progress',
-                value: 'in progress',
+                label: 'IN PROGRESS',
+                value: 'IN PROGRESS',
               },
               {
-                label: 'Done',
-                value: 'done',
+                label: 'DONE',
+                value: 'DONE',
               },
               {
-                label: 'Pending',
-                value: 'pending',
+                label: 'PENDING',
+                value: 'PENDING',
               },
               {
-                label: 'Completed',
-                value: 'completed',
+                label: 'COMPLETED',
+                value: 'COMPLETED',
               },
               {
-                label: 'Backlog',
-                value: 'backlog',
+                label: 'BACKLOG',
+                value: 'BACKLOG',
               },
             ]}
           />
         )}
-        {/* {table.getColumn('priority') && (
-          <DataTableFacetedFilter column={table.getColumn('priority')} title="Priority" options={priorities} />
-        )} */}
+        {profiles?.data && table.getColumn('profiles_username') && (
+          <DataTableFacetedFilter column={table.getColumn('profiles_username')} title="User" options={filterProfiles} />
+        )}
         {isFiltered && (
           <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
             Reset
