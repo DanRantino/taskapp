@@ -1,6 +1,6 @@
 'use client';
 import Skeleton from '@/components/ui/Skeleton';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { createBrowserClient } from '@/server/browserClient';
+import { updateTask } from '@/server/tasks/actions';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   task: z.string().nonempty().nullish(),
@@ -19,7 +21,15 @@ const formSchema = z.object({
       username: z.string().nonempty(),
     })
     .nullish(),
-  status: z.string().nonempty().nullish(),
+  status: z
+    .union([
+      z.literal('BACKLOG'),
+      z.literal('PENDING'),
+      z.literal('IN PROGRESS'),
+      z.literal('COMPLETED'),
+      z.literal('TO DO'),
+    ])
+    .nullish(),
 });
 
 type Props = {
@@ -39,8 +49,9 @@ async function getTaskById(id: string | null) {
 }
 
 function TaskForm({ id }: Props) {
+  const router = useRouter();
   const { data } = useQuery(['task', id], () => getTaskById(id));
-
+  const queryClient = useQueryClient();
   const {
     isFetching: isFetchingProfile,
     isLoading: isLoadingProfile,
@@ -58,8 +69,10 @@ function TaskForm({ id }: Props) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    alert('submit');
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await updateTask(id, values.task, values.status, values.profiles?.username);
+    queryClient.invalidateQueries(['tasks']);
+    router.push('/');
   }
 
   function defaultValue() {
