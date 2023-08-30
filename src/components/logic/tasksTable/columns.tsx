@@ -77,6 +77,13 @@ export const columns: ColumnDef<TTasks>[] = [
     },
   },
   {
+    accessorKey: 'link_project.projects.name',
+    header: 'Project',
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {

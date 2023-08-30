@@ -11,8 +11,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { createBrowserClient } from '@/server/browserClient';
-import { updateTask } from '@/server/tasks/actions';
+import { getTaskById, updateTask } from '@/server/tasks/actions';
 import { useRouter } from 'next/navigation';
+import { getProfiles } from '@/server/profile/actions';
+import { getProjects } from '@/server/projects/actions';
 
 const formSchema = z.object({
   task: z.string().nonempty().nullish(),
@@ -30,6 +32,7 @@ const formSchema = z.object({
       z.literal('TO DO'),
     ])
     .nullish(),
+  projectId: z.string().nullish(),
 });
 
 type Props = {
@@ -37,19 +40,8 @@ type Props = {
 };
 
 const statuses = ['BACKLOG', 'PENDING', 'IN PROGRESS', 'COMPLETED', 'TO DO'];
-export async function getProfiles() {
-  const supabase = createBrowserClient();
-  return await supabase.from('profiles').select('*');
-}
-async function getTaskById(id: string | null) {
-  const supabase = createBrowserClient();
-  if (!id) return null;
-  const data = (await supabase.from('tasks').select('*, profiles( username  )').eq('id', id).single()).data;
-  return data;
-}
 
 function TaskForm({ id }: Props) {
-  const router = useRouter();
   const { data } = useQuery(['task', id], () => getTaskById(id));
   const queryClient = useQueryClient();
   const {
@@ -59,13 +51,14 @@ function TaskForm({ id }: Props) {
   } = useQuery(['profiles'], getProfiles, {
     refetchOnWindowFocus: false,
   });
-
+  const { data: projects } = useQuery(['projects'], getProjects);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       profiles: null,
       status: null,
       task: null,
+      projectId: null,
     },
   });
 
@@ -79,6 +72,7 @@ function TaskForm({ id }: Props) {
       profiles: data?.profiles,
       status: data?.status,
       task: data?.task,
+      projectId: data?.link_project?.projects?.id.toString(),
     });
   }
 
@@ -118,7 +112,7 @@ function TaskForm({ id }: Props) {
               </FormItem>
             )}
           />
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 space-y-4">
             <FormField
               control={form.control}
               name="profiles.username"
@@ -135,7 +129,7 @@ function TaskForm({ id }: Props) {
                       <SelectContent>
                         <SelectItem value=""> </SelectItem>
                         {profiles?.data?.map(profile => (
-                          <SelectItem key={profile.id} value={profile.username}>
+                          <SelectItem key={profile.username} value={profile.username}>
                             {profile.username}
                           </SelectItem>
                         ))}
@@ -192,6 +186,34 @@ function TaskForm({ id }: Props) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="projectId"
+              render={({ field, formState }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Pojects</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value?.toString()}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={field.value?.toString()} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {projects?.data?.map(project => (
+                            <SelectItem key={project.projects?.id} value={project.projects?.id.toString()!}>
+                              {project.projects?.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
                   </FormItem>
                 );
               }}

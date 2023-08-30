@@ -6,7 +6,7 @@ import { TStatus } from '@/types/tasks.types';
 export async function getTasks() {
   const supabase = createServerClient();
   revalidatePath('/');
-  return await supabase.from('tasks').select('*, profiles( username  ) ');
+  return await supabase.from('tasks').select('*, profiles( username  ), link_project (  projects ( name ) ) ');
 }
 
 export async function deleteById(id: string | undefined) {
@@ -19,7 +19,13 @@ export async function deleteById(id: string | undefined) {
 export async function getTaskById(id: string | null) {
   const supabase = createServerClient();
   if (!id) return null;
-  const data = (await supabase.from('tasks').select('*, profiles( username  )').eq('id', id).single()).data;
+  const data = (
+    await supabase
+      .from('tasks')
+      .select('*, profiles( username  ), link_project (  projects ( id,name ) )')
+      .eq('id', id)
+      .single()
+  ).data;
   return data;
 }
 

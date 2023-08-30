@@ -59,7 +59,6 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
-
   function deleteTasks() {
     // table.getSelectedRowModel().rows.forEach(row => {
     //   //@ts-ignore

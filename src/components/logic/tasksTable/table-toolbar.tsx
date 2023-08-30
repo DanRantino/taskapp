@@ -10,6 +10,7 @@ import { DataTableFacetedFilter } from '@/components/ui/table-facet-filter';
 import { useQuery } from '@tanstack/react-query';
 import { getProfiles } from '@/server/profile/actions';
 import { useState } from 'react';
+import { getProjects } from '@/server/projects/actions';
 
 // import { priorities, statuses } from '../data/data';
 // import { DataTableFacetedFilter } from './data-table-faceted-filter';
@@ -27,6 +28,13 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
       icon?: React.ComponentType<{ className?: string }>;
     }[]
   >([]);
+  const [filterProjects, setFilterProjects] = useState<
+    {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[]
+  >([]);
   const { data: profiles } = useQuery(['profiles'], async () => {
     const { data } = await getProfiles();
     let arr: {
@@ -38,6 +46,19 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
       arr.push({ label: profile.username, value: profile.username });
     });
     setFilterProfiles(arr);
+    return { data };
+  });
+  const { data: projects } = useQuery(['projects'], async () => {
+    const { data } = await getProjects();
+    let arr: {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[] = [];
+    data?.forEach(project => {
+      if (project.projects?.name) arr.push({ label: project.projects?.name, value: project.projects?.name });
+    });
+    setFilterProjects(arr);
     return { data };
   });
 
@@ -88,6 +109,13 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         )}
         {profiles?.data && table.getColumn('profiles_username') && (
           <DataTableFacetedFilter column={table.getColumn('profiles_username')} title="User" options={filterProfiles} />
+        )}
+        {projects?.data && table.getColumn('link_project_projects.name') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('link_project_projects.name')}
+            title="Project"
+            options={filterProjects}
+          />
         )}
         {isFiltered && (
           <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
