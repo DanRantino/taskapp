@@ -77,7 +77,7 @@ export const columns: ColumnDef<TTasks>[] = [
     },
   },
   {
-    accessorKey: 'link_project.projects.name',
+    accessorKey: 'project.name',
     header: 'Project',
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));

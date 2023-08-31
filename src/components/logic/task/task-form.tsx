@@ -63,7 +63,8 @@ function TaskForm({ id }: Props) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await updateTask(id, values.task, values.status, values.profiles?.username);
+    const ret = await updateTask(id, values.task, values.status, values.profiles?.username, values.projectId);
+    console.log('🚀 ~ file: task-form.tsx:67 ~ onSubmit ~ ret:', ret);
     queryClient.invalidateQueries(['tasks']);
   }
 
@@ -72,7 +73,7 @@ function TaskForm({ id }: Props) {
       profiles: data?.profiles,
       status: data?.status,
       task: data?.task,
-      projectId: data?.link_project?.projects?.id.toString(),
+      projectId: data?.project?.toString(),
     });
   }
 
@@ -112,13 +113,13 @@ function TaskForm({ id }: Props) {
               </FormItem>
             )}
           />
-          <div className="flex space-x-4 space-y-4">
+          <div className="flex space-x-4 space-y-8">
             <FormField
               control={form.control}
               name="profiles.username"
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pt-8">
                     <FormLabel>User</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -206,8 +207,8 @@ function TaskForm({ id }: Props) {
                       <SelectContent>
                         <SelectGroup>
                           {projects?.data?.map(project => (
-                            <SelectItem key={project.projects?.id} value={project.projects?.id.toString()!}>
-                              {project.projects?.name}
+                            <SelectItem key={project.id} value={project.id.toString()!}>
+                              {project?.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>

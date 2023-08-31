@@ -56,7 +56,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
       icon?: React.ComponentType<{ className?: string }>;
     }[] = [];
     data?.forEach(project => {
-      if (project.projects?.name) arr.push({ label: project.projects?.name, value: project.projects?.name });
+      if (project?.name) arr.push({ label: project?.name, value: project?.name });
     });
     setFilterProjects(arr);
     return { data };
@@ -110,12 +110,8 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         {profiles?.data && table.getColumn('profiles_username') && (
           <DataTableFacetedFilter column={table.getColumn('profiles_username')} title="User" options={filterProfiles} />
         )}
-        {projects?.data && table.getColumn('link_project_projects.name') && (
-          <DataTableFacetedFilter
-            column={table.getColumn('link_project_projects.name')}
-            title="Project"
-            options={filterProjects}
-          />
+        {projects?.data && table.getColumn('project_name') && (
+          <DataTableFacetedFilter column={table.getColumn('project_name')} title="Project" options={filterProjects} />
         )}
         {isFiltered && (
           <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">

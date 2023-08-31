@@ -9,46 +9,11 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      link_project: {
-        Row: {
-          created_at: string
-          id: number
-          project_id: number
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          project_id: number
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          project_id?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "link_project_project_id_fkey"
-            columns: ["project_id"]
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "link_project_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       profiles: {
         Row: {
           avatar_url: string
           full_name: string
           id: string
-          link_project: number | null
           updated_at: string | null
           username: string
           website: string | null
@@ -57,7 +22,6 @@ export interface Database {
           avatar_url: string
           full_name: string
           id: string
-          link_project?: number | null
           updated_at?: string | null
           username: string
           website?: string | null
@@ -66,7 +30,6 @@ export interface Database {
           avatar_url?: string
           full_name?: string
           id?: string
-          link_project?: number | null
           updated_at?: string | null
           username?: string
           website?: string | null
@@ -76,12 +39,6 @@ export interface Database {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_link_project_fkey"
-            columns: ["link_project"]
-            referencedRelation: "link_project"
             referencedColumns: ["id"]
           }
         ]
@@ -111,7 +68,7 @@ export interface Database {
         Row: {
           created_at: string | null
           id: string
-          project_id: number | null
+          project: number | null
           status: Database["public"]["Enums"]["task_status"] | null
           task: string | null
           user_id: string | null
@@ -119,7 +76,7 @@ export interface Database {
         Insert: {
           created_at?: string | null
           id?: string
-          project_id?: number | null
+          project?: number | null
           status?: Database["public"]["Enums"]["task_status"] | null
           task?: string | null
           user_id?: string | null
@@ -127,16 +84,16 @@ export interface Database {
         Update: {
           created_at?: string | null
           id?: string
-          project_id?: number | null
+          project?: number | null
           status?: Database["public"]["Enums"]["task_status"] | null
           task?: string | null
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "tasks_project_id_fkey"
-            columns: ["project_id"]
-            referencedRelation: "link_project"
+            foreignKeyName: "tasks_project_fkey"
+            columns: ["project"]
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
           {
