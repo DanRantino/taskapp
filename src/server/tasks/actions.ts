@@ -6,7 +6,7 @@ import { TStatus } from '@/types/tasks.types';
 export async function getTasks() {
   const supabase = createServerClient();
   revalidatePath('/');
-  return await supabase.from('tasks').select('*, profiles( username  ), link_project (  projects ( name ) ) ');
+  return await supabase.from('tasks').select('*, profiles( username  ), project (  name ) ');
 }
 
 export async function deleteById(id: string | undefined) {
@@ -20,11 +20,7 @@ export async function getTaskById(id: string | null) {
   const supabase = createServerClient();
   if (!id) return null;
   const data = (
-    await supabase
-      .from('tasks')
-      .select('*, profiles( username  ), link_project (  projects ( id,name ) )')
-      .eq('id', id)
-      .single()
+    await supabase.from('tasks').select('*, profiles( username  ), projects ( id,name ) ').eq('id', id).single()
   ).data;
   return data;
 }
@@ -34,10 +30,13 @@ export async function updateTask(
   task: string | null | undefined,
   status: TStatus | null | undefined,
   username: string | null | undefined,
+  projectId: string | null | undefined,
 ) {
+  console.log('🚀 ~ file: actions.ts:39 ~ projectId:', projectId);
   const supabase = createServerClient();
   if (!id) return null;
   const { data } = await supabase.from('profiles').select('*').eq('username', username).single();
   if (!data) return null;
-  return await supabase.from('tasks').update({ task, status, user_id: data.id }).eq('id', id);
+  if (!projectId) return null;
+  return await supabase.from('tasks').update({ task, status, user_id: data.id, project: +projectId }).eq('id', id);
 }
