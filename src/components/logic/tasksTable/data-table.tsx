@@ -19,15 +19,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useState } from 'react';
 import { DataTablePagination } from '@/components/ui/table-pagination';
 import { DataTableToolbar } from './table-toolbar';
-import { Button } from '@/components/ui/button';
 import DeleteDialog from '../dialog/confirm-delete';
 import { deleteById } from '@/server/tasks/actions';
+import { useQueryClient } from '@tanstack/react-query';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const queryClient = useQueryClient();
+
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -60,10 +62,11 @@ export function TableTasks<TData, TValue>({ columns, data }: DataTableProps<TDat
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
   function deleteTasks() {
-    // table.getSelectedRowModel().rows.forEach(row => {
-    //   //@ts-ignore
-    //   deleteById(row.original?.id as string);
-    // });
+    table.getSelectedRowModel().rows.forEach(row => {
+      //@ts-ignore
+      deleteById(row.original?.id as string);
+      queryClient.invalidateQueries(['tasks']);
+    });
   }
   return (
     <div className="space-y-4 w-10/12 h-full pt-4">
