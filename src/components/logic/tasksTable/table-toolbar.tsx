@@ -88,10 +88,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                 label: 'IN PROGRESS',
                 value: 'IN PROGRESS',
               },
-              {
-                label: 'DONE',
-                value: 'DONE',
-              },
+
               {
                 label: 'PENDING',
                 value: 'PENDING',

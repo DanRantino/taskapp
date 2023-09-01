@@ -5,41 +5,21 @@ import React, { useEffect } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+
 import { Button } from '@/components/ui/button';
-import { createBrowserClient } from '@/server/browserClient';
 import { getTaskById, updateTask } from '@/server/tasks/actions';
-import { useRouter } from 'next/navigation';
 import { getProfiles } from '@/server/profile/actions';
 import { getProjects } from '@/server/projects/actions';
-
-const formSchema = z.object({
-  task: z.string().nonempty().nullish(),
-  profiles: z
-    .object({
-      username: z.string().nonempty(),
-    })
-    .nullish(),
-  status: z
-    .union([
-      z.literal('BACKLOG'),
-      z.literal('PENDING'),
-      z.literal('IN PROGRESS'),
-      z.literal('COMPLETED'),
-      z.literal('TO DO'),
-    ])
-    .nullish(),
-  projectId: z.string().nullish(),
-});
+import { formSchema } from '@/lib/schemas';
+import SelectProjects from '../select/select-projects';
+import SelectStatus from '../select/select-status';
+import SelectProfile from '../select/select-profile';
+import { Textarea } from '@/components/ui/textarea';
 
 type Props = {
   id: string;
 };
-
-const statuses = ['BACKLOG', 'PENDING', 'IN PROGRESS', 'COMPLETED', 'TO DO'];
 
 function TaskForm({ id }: Props) {
   const { data } = useQuery(['task', id], () => getTaskById(id));
@@ -64,7 +44,6 @@ function TaskForm({ id }: Props) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const ret = await updateTask(id, values.task, values.status, values.profiles?.username, values.projectId);
-    console.log('🚀 ~ file: task-form.tsx:67 ~ onSubmit ~ ret:', ret);
     queryClient.invalidateQueries(['tasks']);
   }
 
@@ -114,111 +93,9 @@ function TaskForm({ id }: Props) {
             )}
           />
           <div className="flex space-x-4 space-y-8">
-            <FormField
-              control={form.control}
-              name="profiles.username"
-              render={({ field }) => {
-                return (
-                  <FormItem className="pt-8">
-                    <FormLabel>User</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={field.value} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value=""> </SelectItem>
-                        {profiles?.data?.map(profile => (
-                          <SelectItem key={profile.username} value={profile.username}>
-                            {profile.username}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field, formState }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value?.valueOf()}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              <p
-                                className={cn('font-medium', {
-                                  'text-green-500': field.value === 'COMPLETED',
-                                  'text-red-500': field.value === 'PENDING',
-                                  'text-yellow-500': field.value === 'IN PROGRESS',
-                                  'text-gray-500': field.value === 'TO DO',
-                                  'text-blue-500': field.value === 'BACKLOG',
-                                })}
-                              >
-                                {field.value}
-                              </p>
-                            }
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          {statuses.map(status => (
-                            <SelectItem
-                              className={cn('font-medium', {
-                                'text-green-500': status === 'COMPLETED',
-                                'text-red-500': status === 'PENDING',
-                                'text-yellow-500': status === 'IN PROGRESS',
-                                'text-gray-500': status === 'TO DO',
-                                'text-blue-500': status === 'BACKLOG',
-                              })}
-                              key={status}
-                              value={status}
-                            >
-                              {status}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="projectId"
-              render={({ field, formState }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Pojects</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value?.toString()}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={field.value?.toString()} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          {projects?.data?.map(project => (
-                            <SelectItem key={project.id} value={project.id.toString()!}>
-                              {project?.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
+            <SelectProfile form={form} profiles={profiles} />
+            <SelectStatus form={form} />
+            <SelectProjects form={form} projects={projects} />
           </div>
           <div className="w-3/4 flex justify-evenly pt-4">
             <Button type="submit" variant="default">

@@ -32,11 +32,23 @@ export async function updateTask(
   username: string | null | undefined,
   projectId: string | null | undefined,
 ) {
-  console.log('🚀 ~ file: actions.ts:39 ~ projectId:', projectId);
   const supabase = createServerClient();
   if (!id) return null;
   const { data } = await supabase.from('profiles').select('*').eq('username', username).single();
   if (!data) return null;
   if (!projectId) return null;
   return await supabase.from('tasks').update({ task, status, user_id: data.id, project: +projectId }).eq('id', id);
+}
+
+export async function createTask(
+  task: string | null | undefined,
+  status: TStatus | null | undefined,
+  username: string | null | undefined,
+  projectId: string | null | undefined,
+) {
+  const supabase = createServerClient();
+  if (!projectId) return null;
+  const { data } = await supabase.from('profiles').select('*').eq('username', username).single();
+  if (!data) return null;
+  return await supabase.from('tasks').insert({ task, status, user_id: data.id, project: +projectId });
 }
