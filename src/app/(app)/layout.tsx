@@ -1,5 +1,6 @@
 import Navbar from '@/components/ui/navBar';
 import Providers from '@/components/logic/providers';
+import NewTask from '@/components/logic/newTask';
 
 export const metadata = {
   title: 'Create Next App',
@@ -8,10 +9,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <body className="w-screen min-h-screen overflow-hidden">
+    <body className="w-screen min-h-screen bg-background  h-fit overflow-x-hidden">
       <Providers>
         <Navbar />
-        <main className="min-h-screen bg-background flex flex-col items-center">{children}</main>
+        <main className="h-full flex flex-col items-center">
+          {children}
+          <NewTask />
+        </main>
       </Providers>
     </body>
   );
