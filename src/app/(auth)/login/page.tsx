@@ -29,7 +29,7 @@ export default function Login() {
     const form = new FormData();
     form.append('email', values.email);
     form.append('password', values.password);
-    await fetch('/auth/sign-in', {
+    const data = await fetch('/auth/sign-in', {
       method: 'POST',
 
       body: form,

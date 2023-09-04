@@ -9,7 +9,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ExitIcon } from '@radix-ui/react-icons';
+import { ExitIcon, PersonIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 type Props = {
   src?: string;
@@ -36,6 +37,13 @@ function Avatar({ src }: Props) {
         <DropdownMenuContent className="w-52 mr-2 bg-popover">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem className="focus:text-foreground ">
+            <Link href="/admin" className="w-full flex">
+              <PersonIcon className="mr-4 w-4 h-4" />
+              <span>Admin</span>
+              <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem className="focus:text-destructive " onClick={signOut}>
             <ExitIcon className="mr-4 w-4 h-4" />
             <span>Log out</span>
